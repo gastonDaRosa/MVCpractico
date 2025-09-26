@@ -124,3 +124,25 @@ select:disabled {
     color: #999;
     cursor: not-allowed;
 }
+
+a.boton {
+  display: inline-block; /* Para que se comporte como un bloque en línea */
+  padding: 10px 20px; /* Espaciado interno para que tenga forma de botón */
+  background-color: #0057b8; /* Color de fondo (puedes cambiarlo) */
+  color: white; /* Color del texto */
+  text-align: center; /* Centra el texto */
+  text-decoration: none; /* Quita el subrayado */
+  border-radius: 12px; /* Bordes redondeados */
+  font-size: 16px; /* Tamaño de la fuente */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones para interacciones */
+}
+
+a.boton:hover {
+  background-color: #004799; /* Cambio de color al pasar el mouse */
+  color: rgb(255, 0, 0);
+  transform: translateY(-3px); /* Efecto de elevación */
+}
+
+a.boton:active {
+  transform: translateY(1px); /* Efecto al hacer clic */
+}

@@ -1,23 +1,18 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
--->
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes</title>
+    <title>Gestión de Consultas</title>
     <script src="/vistaWeb.js"></script>
-    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="../base.css">
 </head>
 <body>
      <script src="/utilesVista.js"></script>
     <div class="container">
-        <h1>Ingreso de Clientes</h1>
+        <h1>Ingreso de Consultas</h1>
 
-        <form id="formBuscar" method="POST" action="/buscarCliente">
+        <form id="formBuscar" method="POST" action="/buscarConsulta">
             <div class="form-group">
                 <label for="cedula">Cédula:</label>
                 <input type="text" id="cedula" name="cedula" required>
@@ -25,7 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
         </form>
 
-        <form id="formGuardar" method="POST" action="/guardarCliente">
+        <form id="formGuardar" method="POST" action="/guardarConsulta">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre"  >
@@ -37,39 +32,39 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <button type="submit" id="btnGuardar"  >Guardar</button>
         </form>
 
-        <div id="tablaClientes"></div>
+        <div id="tablaConsultas"></div>
     </div>
 
     <script>
-        urlIniciarVista = "/clientes/vistaConectada";
+        urlIniciarVista = "/consultas/vistaConectada";
         const formBuscar = document.getElementById('formBuscar');
         const formGuardar = document.getElementById('formGuardar');
         const nombre = document.getElementById('nombre');
         const email = document.getElementById('email');
         const btnGuardar = document.getElementById('btnGuardar');
         const cedulaInput = document.getElementById('cedula');
-        const tabla = document.getElementById('tablaClientes');
+        const tabla = document.getElementById('tablaConsultas');
 
         formBuscar.addEventListener('submit', function(e) {
             e.preventDefault();
-            submit("/clientes/ingresarCedula",serializarFormulario('formBuscar'));
+            submit("/consultas/ingresarCedula",serializarFormulario('formBuscar'));
 
         });
 
         formGuardar.addEventListener('submit', function(e) {
             e.preventDefault();
-            submit("/clientes/guardarCliente",serializarFormulario('formGuardar'));
+            submit("/consultas/guardarConsulta",serializarFormulario('formGuardar'));
           
         });
       
-        function mostrar_clientes(clientes){
+        function mostrar_consultas(consultas){
           
-           tabla.innerHTML = crearTablaDesdeJson(clientes);
+           tabla.innerHTML = crearTablaDesdeJson(consultas);
            
         }
-        function mostrar_cliente(cliente){
-            nombre.value = cliente.nombre;
-            email.value = cliente.email;
+        function mostrar_consulta(consulta){
+            nombre.value = consulta.nombre;
+            email.value = consulta.email;
         }
         function mostrar_habilitarIngreso(habilitar) {
             nombre.value = '';

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <script src="/vistaWeb.js"></script>
+    <link rel="stylesheet" href="../base.css">
+</head>
+<body>
+     <script src="/utilesVista.js"></script>
+    <div class="container">
+        <h1>Ingreso de Productos</h1>
+
+        <form id="formBuscar" method="POST" action="/buscarProducto">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <button type="submit" id="btnBuscar">Buscar</button>
+            </div>
+        </form>
+
+        <form id="formGuardar" method="POST" action="/guardarProducto">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre"  >
+            </div>
+            <div class="form-group">
+                <label for="precio">Precio:</label>
+                <input type="number" id="precio" name="precio"  >
+            </div>
+            <div class="form-group">
+                <label for="unidades">Unidades:</label>
+                <input type="number" id="unidades" name="unidades"  >
+            </div>
+            <button type="submit" id="btnGuardar"  >Guardar</button>
+        </form>
+
+        <div id="tablaProductos"></div>
+    </div>
+
+    <script>
+        urlIniciarVista = "/productos/vistaConectada";
+        const formBuscar = document.getElementById('formBuscar');
+        const formGuardar = document.getElementById('formGuardar');
+        const nombre = document.getElementById('nombre');
+        const precio = document.getElementById('precio');
+        const unidades = document.getElementById('unidades');
+        const btnGuardar = document.getElementById('btnGuardar');
+        const tabla = document.getElementById('tablaProductos');
+
+        formBuscar.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submit("/productos/ingresarNombre",serializarFormulario('formBuscar'));
+
+        });
+
+        formGuardar.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submit("/productos/guardarProducto",serializarFormulario('formGuardar'));
+          
+        });
+      
+        function mostrar_productos(productos){
+          
+           tabla.innerHTML = crearTablaDesdeJson(productos);
+           
+        }
+        function mostrar_producto(producto){
+            nombre.value = producto.nombre;
+            email.value = producto.email;
+        }
+        function mostrar_habilitarIngreso(habilitar) {
+            nombre.value = '';
+            email.value = '';
+            nombre.disabled = !habilitar;
+            email.disabled = !habilitar;
+            btnGuardar.disabled = !habilitar;
+        }
+        function mostrar_limpiarEntradas(limpiar) {
+            nombre.value = '';
+            email.value = '';
+            cedulaInput.value = '';
+        }
+        async function mostrar_mensaje(mensaje){
+            await mostrarMensaje(mensaje);
+        }
+    </script>
+</body>
+</html>

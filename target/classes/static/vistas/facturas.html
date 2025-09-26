@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Productos</title>
+    <title>Gestión de Facturas</title>
     <script src="/vistaWeb.js"></script>
-    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="../base.css">
 </head>
 <body>
      <script src="/utilesVista.js"></script>
     <div class="container">
-        <h1>Ingreso de Productos</h1>
+        <h1>Ingreso de Facturas</h1>
 
-        <form id="formBuscar" method="POST" action="/buscarProducto">
+        <form id="formBuscar" method="POST" action="/buscarFactura">
             <div class="form-group">
                 <label for="cedula">Cédula:</label>
                 <input type="text" id="cedula" name="cedula" required>
@@ -20,7 +20,7 @@
             </div>
         </form>
 
-        <form id="formGuardar" method="POST" action="/guardarProducto">
+        <form id="formGuardar" method="POST" action="/guardarFactura">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre"  >
@@ -32,39 +32,39 @@
             <button type="submit" id="btnGuardar"  >Guardar</button>
         </form>
 
-        <div id="tablaProductos"></div>
+        <div id="tablaFacturas"></div>
     </div>
 
     <script>
-        urlIniciarVista = "/productos/vistaConectada";
+        urlIniciarVista = "/facturas/vistaConectada";
         const formBuscar = document.getElementById('formBuscar');
         const formGuardar = document.getElementById('formGuardar');
         const nombre = document.getElementById('nombre');
         const email = document.getElementById('email');
         const btnGuardar = document.getElementById('btnGuardar');
         const cedulaInput = document.getElementById('cedula');
-        const tabla = document.getElementById('tablaProductos');
+        const tabla = document.getElementById('tablaFacturas');
 
         formBuscar.addEventListener('submit', function(e) {
             e.preventDefault();
-            submit("/productos/ingresarCedula",serializarFormulario('formBuscar'));
+            submit("/facturas/ingresarCedula",serializarFormulario('formBuscar'));
 
         });
 
         formGuardar.addEventListener('submit', function(e) {
             e.preventDefault();
-            submit("/productos/guardarProducto",serializarFormulario('formGuardar'));
+            submit("/facturas/guardarFactura",serializarFormulario('formGuardar'));
           
         });
       
-        function mostrar_productos(productos){
+        function mostrar_facturas(facturas){
           
-           tabla.innerHTML = crearTablaDesdeJson(productos);
+           tabla.innerHTML = crearTablaDesdeJson(facturas);
            
         }
-        function mostrar_producto(producto){
-            nombre.value = producto.nombre;
-            email.value = producto.email;
+        function mostrar_factura(factura){
+            nombre.value = factura.nombre;
+            email.value = factura.email;
         }
         function mostrar_habilitarIngreso(habilitar) {
             nombre.value = '';

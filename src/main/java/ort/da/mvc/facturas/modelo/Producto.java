@@ -14,6 +14,7 @@ public class Producto {
     private int precio;
     private int unidades;
     private Proveedor proveedor;
+    private int codUni;
   
 
     public Producto() {
@@ -51,8 +52,35 @@ public class Producto {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-       this.nombre = nombre;
+    public boolean setNombre(String unNombre) {
+       if(verificarNombre(unNombre)){
+            nombre = unNombre;
+            return true;
+       }return false;
+       
+    }
+    
+    public boolean verificarNombre(String nombre){
+        boolean ok = false;
+        if (nombre !=null){
+            int digitos = nombre.length();
+            String blank = " ";
+            boolean sinBlank = true;
+            nombre = nombre.toLowerCase();
+
+            for (int x=0;x<nombre.length()&&sinBlank;x++){
+                String d = nombre.charAt(x)+"";
+                if (!blank.contains(d)){
+                    sinBlank = false;
+                }
+            }
+           
+            if (sinBlank && digitos<=8){
+                ok = true;
+            }    
+        }
+        return ok;        
+    
     }
 
     @Override

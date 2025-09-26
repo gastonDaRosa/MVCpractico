@@ -3,6 +3,7 @@ package ort.da.mvc.facturas.Servicios;
 
 import java.util.ArrayList;
 
+import ort.da.mvc.facturas.modelo.Cliente;
 import ort.da.mvc.facturas.modelo.Producto;
 import ort.da.mvc.facturas.modelo.Proveedor;
 
@@ -59,5 +60,16 @@ public class SistemaStock {
         return true;
     }
    
+    public boolean existeProducto(String unNombre) {
+           return buscarProducto(unNombre)!=null;
+    }
+    public Producto buscarProducto(String unNombre) {
+           for(Producto p:productos){
+               if(p.getNombre().equals(unNombre)){
+                   return p;
+               }
+           }
+           return null;
+    }
    
 }
