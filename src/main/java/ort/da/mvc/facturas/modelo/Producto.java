@@ -64,18 +64,10 @@ public class Producto {
         boolean ok = false;
         if (nombre !=null){
             int digitos = nombre.length();
-            String blank = " ";
-            boolean sinBlank = true;
             nombre = nombre.toLowerCase();
 
-            for (int x=0;x<nombre.length()&&sinBlank;x++){
-                String d = nombre.charAt(x)+"";
-                if (!blank.contains(d)){
-                    sinBlank = false;
-                }
-            }
-           
-            if (sinBlank && digitos<=8){
+                       
+            if ( digitos < 50){
                 ok = true;
             }    
         }

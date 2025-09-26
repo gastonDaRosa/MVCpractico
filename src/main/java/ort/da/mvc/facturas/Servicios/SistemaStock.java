@@ -54,7 +54,20 @@ public class SistemaStock {
     public void agregar(Proveedor unProveedor){
         proveedores.add(unProveedor);
     }
+
+    public boolean existeProveedor(String unNombre) {
+           return buscarProveedor(unNombre)!=null;
+    }
+    public Proveedor buscarProveedor(String unNombre) {
+           for(Proveedor p:proveedores){
+               if(p.getNombre().equals(unNombre)){
+                   return p;
+               }
+           }
+           return null;
+    }
     
+
     public  boolean altaProducto(Producto unProducto){
         productos.add(unProducto);
         return true;

@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ort.da.mvc.facturas.Servicios.SistemaStock;
 import ort.da.mvc.facturas.dto.ProductoDto;
+import ort.da.mvc.facturas.dto.ProveedorDto;
 import ort.da.mvc.facturas.modelo.Producto;
+import ort.da.mvc.facturas.modelo.Proveedor;
 import ort.da.mvc.facturas.modelo.Respuesta;
 
 @RestController
@@ -21,28 +23,35 @@ public class ControladorProductos {
     @PostMapping("/vistaConectada")
     public List<Respuesta> vistaConectada() {
        return Respuesta.lista(productos(), 
-                              new Respuesta("habilitarIngreso",false));
+                              new Respuesta("habilitarIngreso",false),
+                              proveedores());
     }
 
     @PostMapping("/ingresarNombre")
-    public List<Respuesta> ingresarNombre(@RequestParam String nombre) {
+    public List<Respuesta> ingresarNombre(@RequestParam String nombreBsc) {
        producto = new Producto();
-       if(!producto.setNombre(nombre)){
-           return Respuesta.lista(mensaje("Cedula incorrecta"));
+       if(!producto.setNombre(nombreBsc)){
+           return Respuesta.lista(mensaje("Nombre incorrecto"));
        }
-       Producto tmp = SistemaStock.getInstancia().buscarProducto(nombre);
+       Producto tmp = SistemaStock.getInstancia().buscarProducto(nombreBsc);
        if(tmp!=null){
            return Respuesta.lista(mensaje("Ya existe el producto"),
                                   producto(tmp));
        }
        return Respuesta.lista(new Respuesta("habilitarIngreso",true));
     }
+    
     @PostMapping("/guardarProducto")
-    public List<Respuesta> guardarProducto(@RequestParam String nombre,@RequestParam int precio, @RequestParam int unidades) {
+    public List<Respuesta> guardarProducto(@RequestParam String nombre,@RequestParam int precio, @RequestParam int unidades, @RequestParam String proveedor) {
         if(producto == null)  return Respuesta.lista(mensaje("No se ha ingresado un nombre"));
         producto.setNombre(nombre);
         producto.setPrecio(precio);
         producto.setUnidades(unidades);
+        Proveedor prov = SistemaStock.getInstancia().buscarProveedor(proveedor);
+        if (prov == null) {
+            return Respuesta.lista(mensaje("No se pudo encontrar el proveedor"));
+        }
+        producto.setProveedor(prov);
         if(SistemaStock.getInstancia().altaProducto(producto)){
             producto = null;
             return Respuesta.lista(productos(),
@@ -58,6 +67,12 @@ public class ControladorProductos {
         
         return new Respuesta("productos",
                       ProductoDto.listaDtos(SistemaStock.getInstancia().getProductos()));
+        
+    }
+    private Respuesta proveedores() {
+        
+        return new Respuesta("proveedores",
+                      ProveedorDto.listaDtos(SistemaStock.getInstancia().getProveedores()));
         
     }
     private Respuesta mensaje(String texto) {

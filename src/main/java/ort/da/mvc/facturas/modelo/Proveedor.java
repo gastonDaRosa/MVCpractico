@@ -12,12 +12,15 @@ import java.util.ArrayList;
  * @author magda
  */
 public class Proveedor {
-    
+    private static int contador = 0;
+
     private String nombre;
+    private int id;
     private ArrayList<Producto> productos = new ArrayList();
 
     public Proveedor(String nombre) {
         this.nombre = nombre;
+        this.id = contador++;
     }
 
     public String getNombre() {
@@ -35,9 +38,15 @@ public class Proveedor {
         return productos.add(p);
     }
 
+    
+
     @Override
     public String toString() {
         return  nombre ;
+    }
+
+    public int getId() {
+        return id;
     }
     
     
