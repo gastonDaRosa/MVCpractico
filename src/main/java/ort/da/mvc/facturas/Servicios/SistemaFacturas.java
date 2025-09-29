@@ -19,6 +19,8 @@ public class SistemaFacturas {
     
     private static SistemaFacturas instancia; 
     private ArrayList<Factura> facturas = new ArrayList();
+    private int totalFacturado = 0;
+    private Factura facturaEnCurso = null;
  
     
     public static SistemaFacturas getInstancia(){
@@ -53,5 +55,38 @@ public class SistemaFacturas {
       
         return ret;
     }
+
+    public int getTotalFacturado() {
+    return totalFacturado;
+}
+
+public boolean iniciarFactura(Cliente cliente) {
+    if (facturaEnCurso != null) return false;
+    facturaEnCurso = new Factura(cliente);
+    return true;
+}
+
+public boolean agregarProductoAFactura(Producto p, int cantidad) {
+    if (facturaEnCurso == null) return false;
+    boolean ok = facturaEnCurso.agregarProducto(p, cantidad);
+    return ok;
+}
+
+public boolean confirmarFactura() {
+    if (facturaEnCurso == null || !facturaEnCurso.tieneLineas()) return false;
+    facturaEnCurso.descontarStock();
+    facturas.add(facturaEnCurso);
+    totalFacturado += facturaEnCurso.total();
+    facturaEnCurso = null;
+    return true;
+}
+
+public void descartarFactura() {
+    facturaEnCurso = null;
+}
+
+public Factura getFacturaEnCurso() {
+    return facturaEnCurso;
+}
    
 }

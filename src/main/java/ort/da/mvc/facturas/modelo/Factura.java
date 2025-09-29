@@ -50,7 +50,7 @@ public class Factura {
                 ret = true;
             }
         }
-        return ret;       
+        return ret;
     }
 
 
@@ -68,6 +68,30 @@ public class Factura {
         return total;
     }
 
-   
+    public boolean agregarProducto(Producto producto, int cantidad) {
+    if (cantidad < 1 || producto.getUnidades() < cantidad) return false;
+
+    for (LineaFactura linea : lineas) {
+        if (linea.getProducto().equals(producto)) {
+            linea.setCantidad(linea.getCantidad() + cantidad);
+            return true;
+        }
+    }
+
+    lineas.add(new LineaFactura(producto, cantidad));
+    return true;
+    }
     
+    public void descontarStock() {
+        for (LineaFactura linea : lineas) {
+            Producto p = linea.getProducto();
+            p.setUnidades(p.getUnidades() - linea.getCantidad());
+        }
+    }
+    
+    public boolean tieneLineas() {
+        return !lineas.isEmpty();
+    }
+
+
 }

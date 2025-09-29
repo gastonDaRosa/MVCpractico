@@ -1,86 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Facturas</title>
     <script src="/vistaWeb.js"></script>
-    <link rel="stylesheet" href="../base.css">
-</head>
-<body>
-     <script src="/utilesVista.js"></script>
+    <link rel="stylesheet" href="../base.css" />
+  </head>
+  <body>
     <div class="container">
-        <h1>Ingreso de Facturas</h1>
+      <h1>Gestión de Facturas</h1>
 
-        <form id="formBuscar" method="POST" action="/buscarFactura">
-            <div class="form-group">
-                <label for="cedula">Cédula:</label>
-                <input type="text" id="cedula" name="cedula" required>
-                <button type="submit" id="btnBuscar">Buscar</button>
-            </div>
+      <div>Total Facturado: <span id="totalFacturado">$0</span></div>
+
+      <!-- Formulario para iniciar factura -->
+      <form id="formIniciarFactura">
+        <label>Cédula Cliente:</label>
+        <input type="text" id="cedula" required />
+        <button type="submit">Iniciar Factura</button>
+      </form>
+
+      <!-- Factura actual -->
+      <div id="facturaActual">
+        <p>Cliente: <span id="clienteNombre"></span></p>
+        <p>Fecha: <span id="fechaFactura"></span></p>
+        <p>Total Factura: $<span id="totalFactura">0</span></p>
+
+        <!-- Formulario para agregar producto -->
+        <form id="formAgregarProducto">
+          <input
+            type="text"
+            id="nombreProducto"
+            name="nombreProducto"
+            placeholder="Nombre Producto"
+            required
+          />
+          <input
+            type="number"
+            id="cantidadProducto"
+            name="cantidadProducto"
+            placeholder="Cantidad"
+            min="1"
+            required
+          />
+          <button type="submit">Agregar Producto</button>
         </form>
 
-        <form id="formGuardar" method="POST" action="/guardarFactura">
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre"  >
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email"  >
-            </div>
-            <button type="submit" id="btnGuardar"  >Guardar</button>
-        </form>
+        <!-- Tabla de líneas de factura -->
+        <table id="tablaLineas">
+          <thead>
+            <tr>
+              <th>Cantidad</th>
+              <th>Producto</th>
+              <th>Total Línea</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
 
-        <div id="tablaFacturas"></div>
+        <button id="btnConfirmar">Confirmar Factura</button>
+        <button id="btnDescartar">Descartar Factura</button>
+      </div>
     </div>
 
     <script>
-        urlIniciarVista = "/facturas/vistaConectada";
-        const formBuscar = document.getElementById('formBuscar');
-        const formGuardar = document.getElementById('formGuardar');
-        const nombre = document.getElementById('nombre');
-        const email = document.getElementById('email');
-        const btnGuardar = document.getElementById('btnGuardar');
-        const cedulaInput = document.getElementById('cedula');
-        const tabla = document.getElementById('tablaFacturas');
+      urlIniciarVista = "/facturas/vistaConectada";
 
-        formBuscar.addEventListener('submit', function(e) {
-            e.preventDefault();
-            submit("/facturas/ingresarCedula",serializarFormulario('formBuscar'));
+      // Formularios y botones
+      const formBuscar = document.getElementById("formIniciarFactura");
+      const formAgregar = document.getElementById("formAgregarProducto");
+      const btnConfirmar = document.getElementById("btnConfirmar");
+      const btnDescartar = document.getElementById("btnDescartar");
 
-        });
+      // Inputs y tablas
+      const cedulaInput = document.getElementById("cedula");
+      const nombreProducto = document.getElementById("nombreProducto");
+      const cantidadProducto = document.getElementById("cantidadProducto");
+      const clienteNombre = document.getElementById("clienteNombre");
+      const fechaFactura = document.getElementById("fechaFactura");
+      const totalFactura = document.getElementById("totalFactura");
+      const tablaLineas = document.getElementById("tablaLineas").querySelector("tbody");
 
-        formGuardar.addEventListener('submit', function(e) {
-            e.preventDefault();
-            submit("/facturas/guardarFactura",serializarFormulario('formGuardar'));
-          
-        });
-      
-        function mostrar_facturas(facturas){
-          
-           tabla.innerHTML = crearTablaDesdeJson(facturas);
-           
+      let facturaActiva = false; // bandera para saber si hay factura iniciada
+
+      // ---------- EVENTOS ----------
+
+      // Iniciar factura por cédula
+      formBuscar.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (facturaActiva) {
+          mostrar_mensaje("Debe finalizar la factura actual antes de iniciar otra");
+          return;
         }
-        function mostrar_factura(factura){
-            nombre.value = factura.nombre;
-            email.value = factura.email;
+        submit("/facturas/ingresarCedula", serializarFormulario("formIniciarFactura"));
+      });
+
+      // Agregar producto a factura
+      formAgregar.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!facturaActiva) {
+          mostrar_mensaje("Debe iniciar la factura antes de agregar productos");
+          return;
         }
-        function mostrar_habilitarIngreso(habilitar) {
-            nombre.value = '';
-            email.value = '';
-            nombre.disabled = !habilitar;
-            email.disabled = !habilitar;
-            btnGuardar.disabled = !habilitar;
+        submit("/facturas/agregarProducto", serializarFormulario("formAgregarProducto"));
+      });
+
+      // Confirmar factura
+      btnConfirmar.addEventListener("click", async function (e) {
+        e.preventDefault();
+        if (!facturaActiva) {
+          mostrar_mensaje("No hay factura iniciada");
+          return;
         }
-        function mostrar_limpiarEntradas(limpiar) {
-            nombre.value = '';
-            email.value = '';
-            cedulaInput.value = '';
+
+        const confirmar = await mostrarConfirmacion("¿Desea confirmar la factura?");
+        if (!confirmar) return;
+
+        submit("/facturas/guardarFactura", serializarFormulario("formAgregarProducto"));
+        facturaActiva = false;
+        mostrar_limpiarEntradas(true);
+      });
+
+      // Descartar factura
+      btnDescartar.addEventListener("click", async function (e) {
+        e.preventDefault();
+        if (!facturaActiva) {
+          mostrar_mensaje("No hay factura iniciada");
+          return;
         }
-        async function mostrar_mensaje(mensaje){
-            await mostrarMensaje(mensaje);
-        }
+
+        const confirmar = await mostrarConfirmacion("¿Desea descartar la factura?");
+        if (!confirmar) return;
+
+        submit("/facturas/descartarFactura", "");
+        facturaActiva = false;
+        mostrar_limpiarEntradas(true);
+      });
+
+      // ---------- FUNCIONES PARA ACTUALIZAR VISTA ----------
+
+      function mostrar_factura(factura) {
+        clienteNombre.textContent = factura.clienteNombre;
+        fechaFactura.textContent = factura.fecha;
+        totalFactura.textContent = `$${factura.total}`;
+        tablaLineas.innerHTML = crearTablaDesdeJson(factura.lineas);
+        facturaActiva = true;
+      }
+
+      function mostrar_totalFacturado(total) {
+        document.getElementById("totalFacturado").textContent = `$${total}`;
+      }
+
+      function mostrar_habilitarIngreso(habilitar) {
+        nombreProducto.value = "";
+        fechaFactura.value = "";
+        totalFactura.textContent = "$0";
+        cantidadProducto.value = "";
+        cantidadProducto.disabled = !habilitar;
+        nombreProducto.disabled = !habilitar;
+        fechaFactura.disabled = !habilitar;
+        totalFactura.disabled = !habilitar;
+      }
+
+      function mostrar_limpiarEntradas(limpiar) {
+        clienteNombre.textContent = "";
+        fechaFactura.textContent = "";
+        totalFactura.textContent = "$0";
+        tablaLineas.innerHTML = "";
+        cedulaInput.value = "";
+        nombreProducto.value = "";
+        cantidadProducto.value = "";
+      }
+
+      async function mostrar_mensaje(mensaje) {
+        await mostrarMensaje(mensaje);
+      }
     </script>
-</body>
+  </body>
 </html>
