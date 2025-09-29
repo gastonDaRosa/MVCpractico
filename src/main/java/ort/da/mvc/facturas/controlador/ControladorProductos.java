@@ -44,11 +44,20 @@ public class ControladorProductos {
     @PostMapping("/guardarProducto")
     public List<Respuesta> guardarProducto(@RequestParam int precio, @RequestParam int unidades, @RequestParam String proveedoresSelect) {
         if(producto == null)  return Respuesta.lista(mensaje("No se ha ingresado un nombre"));
-        producto.setPrecio(precio);
+        if (precio < 1) {
+            return Respuesta.lista(mensaje("No se pudo agregar el producto"),
+            mensaje("El precio no puede ser menor a 1"));
+        }
+        producto.setPrecio(precio) ;
+        if (unidades < 1) {
+            return Respuesta.lista(mensaje("No se pudo agregar el producto"),
+            mensaje("Las unidades no pueden ser menor a 1"));
+        }
         producto.setUnidades(unidades);
         Proveedor prov = SistemaStock.getInstancia().buscarProveedor(proveedoresSelect);
         if (prov == null) {
-            return Respuesta.lista(mensaje("No se pudo encontrar el proveedor"));
+            return Respuesta.lista(mensaje("No se pudo agregar el producto"),
+            mensaje("No se pudo encontrar el proveedor"));
         }
         producto.setProveedor(prov);
         if(SistemaStock.getInstancia().altaProducto(producto)){
