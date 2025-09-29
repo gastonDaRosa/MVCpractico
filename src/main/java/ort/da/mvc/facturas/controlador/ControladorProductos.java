@@ -22,7 +22,7 @@ public class ControladorProductos {
 
     @PostMapping("/vistaConectada")
     public List<Respuesta> vistaConectada() {
-       return Respuesta.lista(productos(), 
+       return Respuesta.lista(productos(),
                               new Respuesta("habilitarIngreso",false),
                               proveedores());
     }
@@ -42,12 +42,11 @@ public class ControladorProductos {
     }
     
     @PostMapping("/guardarProducto")
-    public List<Respuesta> guardarProducto(@RequestParam String nombre,@RequestParam int precio, @RequestParam int unidades, @RequestParam String proveedor) {
+    public List<Respuesta> guardarProducto(@RequestParam int precio, @RequestParam int unidades, @RequestParam String proveedoresSelect) {
         if(producto == null)  return Respuesta.lista(mensaje("No se ha ingresado un nombre"));
-        producto.setNombre(nombre);
         producto.setPrecio(precio);
         producto.setUnidades(unidades);
-        Proveedor prov = SistemaStock.getInstancia().buscarProveedor(proveedor);
+        Proveedor prov = SistemaStock.getInstancia().buscarProveedor(proveedoresSelect);
         if (prov == null) {
             return Respuesta.lista(mensaje("No se pudo encontrar el proveedor"));
         }

@@ -16,7 +16,7 @@
         <div class="form-group">
           <label for="nombreBsc">Nombre:</label>
           <input type="text" id="nombreBsc" name="nombreBsc" required />
-          <button type="submit" id="btnBuscar">Buscar</button>
+          <button type="submit" id="btnBuscar">Validar</button>
         </div>
       </form>
 
@@ -49,7 +49,8 @@
       const unidades = document.getElementById("unidades");
       const btnGuardar = document.getElementById("btnGuardar");
       const tabla = document.getElementById("tablaProductos");
-      const select = document.getElementById("selectProveedores");
+      const divSelect = document.getElementById("selectProveedores");
+      const select = document.getElementById("proveedoresSelect");
 
       formBuscar.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -71,6 +72,7 @@
         nombreInput.value = producto.nombre;
         precio.value = producto.precio;
         unidades.value = producto.unidades;
+        mostrar_habilitarIngreso(false);
 
         setTimeout(() => {
           const selectReal = document.getElementById("proveedoresSelect");
@@ -82,7 +84,7 @@
 
 
       function mostrar_proveedores(proveedores) {
-        select.innerHTML = crearListaDesdeJson({
+        divSelect.innerHTML = crearListaDesdeJson({
           data: proveedores,
           campoMostrar: "nombre",
           campoValor: "nombre",
@@ -91,12 +93,19 @@
       }
       function mostrar_habilitarIngreso(habilitar) {
         //nombreInput.value = '';
-        precio.value = "";
-        unidades.value = "";
+        //precio.value = "";
+        //unidades.value = "";
 
         precio.disabled = !habilitar;
         unidades.disabled = !habilitar;
         btnGuardar.disabled = !habilitar;
+        setTimeout(() => {
+          const selectReal = document.getElementById("proveedoresSelect");
+          if (selectReal ) {
+            selectReal.disabled = !habilitar;
+          }
+        }, 100);
+        
       }
       function mostrar_limpiarEntradas(limpiar) {
         precio.value = "";
