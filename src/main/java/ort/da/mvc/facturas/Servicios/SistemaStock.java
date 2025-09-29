@@ -44,7 +44,7 @@ public class SistemaStock {
             if (p.getPrecio()<menor.getPrecio()){
                 menor = p;
             }
-        }            
+        }
         
         return menor;
         

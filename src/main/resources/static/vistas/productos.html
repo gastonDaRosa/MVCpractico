@@ -73,21 +73,20 @@
         unidades.value = producto.unidades;
 
         setTimeout(() => {
-          const selectReal = document.querySelector(
-            "#selectProveedores select, #selectProveedores"
-          );
-          if (selectReal && producto.proveedorId) {
-            selectReal.value = producto.proveedorId;
+          const selectReal = document.getElementById("proveedoresSelect");
+          if (selectReal && producto.proveedor) {
+            selectReal.value = producto.proveedor;
           }
         }, 100);
       }
+
+
       function mostrar_proveedores(proveedores) {
-        //select.innerHTML = crearListaDesdeJson(proveedores, 'nombre');
         select.innerHTML = crearListaDesdeJson({
           data: proveedores,
           campoMostrar: "nombre",
-          campoValor: "id", // ← esto asume que tus ProveedorDto tienen un campo 'id'
-          id: "selectProveedores",
+          campoValor: "nombre",
+          id: "proveedoresSelect",
         });
       }
       function mostrar_habilitarIngreso(habilitar) {

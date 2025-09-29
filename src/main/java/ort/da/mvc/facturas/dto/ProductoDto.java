@@ -10,7 +10,6 @@ public class ProductoDto {
     private int precio;
     private int unidades;
     private String proveedor;
-    private int proveedorId;
 
 
     public ProductoDto(Producto p) {
@@ -18,7 +17,6 @@ public class ProductoDto {
         this.precio = p.getPrecio();
         this.unidades = p.getUnidades();
         this.proveedor = p.getProveedor() != null ? p.getProveedor().getNombre() : null;
-        this.proveedorId = p.getProveedor() != null ? p.getProveedor().getId() : null;
     }
 
 
@@ -49,16 +47,6 @@ public class ProductoDto {
 
     public void setUnidades(int unidades) {
         this.unidades = unidades;
-    }
-
-
-    public int getProveedorId() {
-        return proveedorId;
-    }
-
-
-    public void setProveedorId(int proveedor) {
-        this.proveedorId = proveedor;
     }
 
     public String getProveedor() {
