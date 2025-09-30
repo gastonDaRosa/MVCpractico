@@ -61,12 +61,13 @@ public class ControladorFacturas {
 
     @PostMapping("/confirmarFactura")
     public List<Respuesta> confirmarFactura() {
+        Factura facturaConfirmada = SistemaFacturas.getInstancia().getFacturaEnCurso();
         boolean ok = SistemaFacturas.getInstancia().confirmarFactura();
-        if (!ok)
+        if (!ok || facturaConfirmada == null)
             return Respuesta.lista(mensaje("No se pudo confirmar la factura, verifique si hay productos"));
 
         return Respuesta.lista(
-                mensaje("Se guardó correctamente"),
+                mensaje("Se guardo correctamente con numero " + facturaConfirmada.getCodigo()),
                 new Respuesta("totalFacturado", SistemaFacturas.getInstancia().getTotalFacturado()),
                 new Respuesta("limpiarEntradas", true),
                 new Respuesta("habilitarIngreso", false),

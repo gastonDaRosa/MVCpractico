@@ -1,86 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Consultas</title>
     <script src="/vistaWeb.js"></script>
-    <link rel="stylesheet" href="../base.css">
-</head>
-<body>
-     <script src="/utilesVista.js"></script>
+    <link rel="stylesheet" href="../base.css" />
+  </head>
+  <body>
+    <script src="/utilesVista.js"></script>
     <div class="container">
-        <h1>Ingreso de Consultas</h1>
+      <h1>Ingreso de Consultas</h1>
 
-        <form id="formBuscar" method="POST" action="/buscarConsulta">
-            <div class="form-group">
-                <label for="cedula">Cédula:</label>
-                <input type="text" id="cedula" name="cedula" required>
-                <button type="submit" id="btnBuscar">Buscar</button>
-            </div>
-        </form>
+      <!-- Producto más barato -->
+      <div id="productoMasBarato"></div>
 
-        <form id="formGuardar" method="POST" action="/guardarConsulta">
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre"  >
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email"  >
-            </div>
-            <button type="submit" id="btnGuardar"  >Guardar</button>
-        </form>
+      <!-- Clientes que lo compraron -->
+      <div id="tablaClientesBarato"></div>
 
-        <div id="tablaConsultas"></div>
+      <div id="tablaConsultas"></div>
     </div>
 
     <script>
-        urlIniciarVista = "/consultas/vistaConectada";
-        const formBuscar = document.getElementById('formBuscar');
-        const formGuardar = document.getElementById('formGuardar');
-        const nombre = document.getElementById('nombre');
-        const email = document.getElementById('email');
-        const btnGuardar = document.getElementById('btnGuardar');
-        const cedulaInput = document.getElementById('cedula');
-        const tabla = document.getElementById('tablaConsultas');
+      urlIniciarVista = "/clientes/vistaConectada";
 
-        formBuscar.addEventListener('submit', function(e) {
-            e.preventDefault();
-            submit("/consultas/ingresarCedula",serializarFormulario('formBuscar'));
+      const divProducto = document.getElementById("productoMasBarato");
+      const divClientes = document.getElementById("tablaClientesBarato");
+      const tabla = document.getElementById("tablaConsultas");
 
-        });
+      // Mostrar producto más barato (según ProductoDto)
+      function mostrar_producto(producto) {
+        divProducto.innerHTML = `
+          <h3>Producto más barato</h3>
+          Código: ${producto.codigo}<br>
+          Nombre: ${producto.nombre}<br>
+          Precio: $${producto.precio}<br>
+          Stock: ${producto.unidades}<br>
+          Proveedor: ${producto.proveedor ?? "-"}
+        `;
+      }
 
-        formGuardar.addEventListener('submit', function(e) {
-            e.preventDefault();
-            submit("/consultas/guardarConsulta",serializarFormulario('formGuardar'));
-          
-        });
-      
-        function mostrar_consultas(consultas){
-          
-           tabla.innerHTML = crearTablaDesdeJson(consultas);
-           
+      function mostrar_clientes(clientes) {
+        if (!clientes || clientes.length === 0) {
+          divClientes.innerHTML =
+            "<h3>Clientes que lo compraron</h3><p>No hay clientes que hayan comprado el producto.</p>";
+        } else {
+          divClientes.innerHTML =
+            "<h3>Clientes que lo compraron</h3>" +
+            crearTablaDesdeJson(clientes);
         }
-        function mostrar_consulta(consulta){
-            nombre.value = consulta.nombre;
-            email.value = consulta.email;
-        }
-        function mostrar_habilitarIngreso(habilitar) {
-            nombre.value = '';
-            email.value = '';
-            nombre.disabled = !habilitar;
-            email.disabled = !habilitar;
-            btnGuardar.disabled = !habilitar;
-        }
-        function mostrar_limpiarEntradas(limpiar) {
-            nombre.value = '';
-            email.value = '';
-            cedulaInput.value = '';
-        }
-        async function mostrar_mensaje(mensaje){
-            await mostrarMensaje(mensaje);
-        }
+      }
+
+      function mostrar_consultas(consultas) {
+        tabla.innerHTML = crearTablaDesdeJson(consultas);
+      }
+      function mostrar_consulta(consulta) {
+        document.getElementById("nombre").value = consulta.nombre;
+        document.getElementById("email").value = consulta.email;
+      }
+      function mostrar_habilitarIngreso(habilitar) {
+        const nombre = document.getElementById("nombre");
+        const email = document.getElementById("email");
+        const btnGuardar = document.getElementById("btnGuardar");
+
+        nombre.value = "";
+        email.value = "";
+        nombre.disabled = !habilitar;
+        email.disabled = !habilitar;
+        btnGuardar.disabled = !habilitar;
+      }
+      function mostrar_limpiarEntradas(limpiar) {
+        document.getElementById("nombre").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("cedula").value = "";
+      }
+      async function mostrar_mensaje(mensaje) {
+        await mostrarMensaje(mensaje);
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        submit("/clientes/consultaProductoMasBarato", "");
+      });
     </script>
-</body>
+  </body>
 </html>

@@ -8,20 +8,25 @@ import ort.da.mvc.facturas.modelo.Factura;
 import ort.da.mvc.facturas.modelo.LineaFactura;
 
 public class FacturaDto {
+    private String codigo;
     private String clienteNombre;
     private String fecha;
     private int total;
     private List<LineaFacturaDto> lineas = new ArrayList<>();
-    //private String lineasTexto;
 
     public FacturaDto(Factura f) {
+        this.codigo = f.getCodigo();
         this.clienteNombre = f.getCliente().getNombre();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         this.fecha = sdf.format(f.getFecha());
         this.total = f.total();
-        for(LineaFactura lf : f.getLineas()) {
+        for (LineaFactura lf : f.getLineas()) {
             lineas.add(new LineaFacturaDto(lf));
         }
+    }
+
+    public String getCodigo() {
+        return codigo;
     }
 
     public String getClienteNombre() {
@@ -36,10 +41,10 @@ public class FacturaDto {
         return total;
     }
 
-    public List<LineaFacturaDto> getLineas() { return lineas; }
-    
+    public List<LineaFacturaDto> getLineas() {
+        return lineas;
+    }
 
-    // Método estático para listas
     public static List<FacturaDto> listaDtos(List<Factura> facturas) {
         List<FacturaDto> dtos = new ArrayList<>();
         for (Factura f : facturas) {

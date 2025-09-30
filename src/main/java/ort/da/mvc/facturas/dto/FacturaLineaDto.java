@@ -46,7 +46,6 @@ public class FacturaLineaDto {
     //public List<LineaFacturaDto> getLineas() { return lineas; }
     public String getLineasTexto() { return lineasTexto; }
 
-    // Método estático para listas
     public static List<FacturaLineaDto> listaDtos(List<Factura> facturas) {
         List<FacturaLineaDto> dtos = new ArrayList<>();
         for (Factura f : facturas) {

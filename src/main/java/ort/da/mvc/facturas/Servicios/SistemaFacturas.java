@@ -6,9 +6,11 @@
 package ort.da.mvc.facturas.Servicios;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import ort.da.mvc.facturas.modelo.Cliente;
 import ort.da.mvc.facturas.modelo.Factura;
+import ort.da.mvc.facturas.modelo.LineaFactura;
 import ort.da.mvc.facturas.modelo.Producto;
 
 /**
@@ -99,4 +101,30 @@ public class SistemaFacturas {
         }
         return total;
     }
+
+    public Date ultimaCompra(Cliente cliente, Producto producto) {
+        Date ultima = null;
+        for (Factura f : facturas) {
+            if (!f.getCliente().equals(cliente))
+                continue;
+
+            if (producto != null) {
+                boolean contieneProducto = false;
+                for (LineaFactura lf : f.getLineas()) {
+                    if (lf.getProducto().equals(producto)) {
+                        contieneProducto = true;
+                        break;
+                    }
+                }
+                if (!contieneProducto)
+                    continue;
+            }
+
+            if (ultima == null || f.getFecha().after(ultima)) {
+                ultima = f.getFecha();
+            }
+        }
+        return ultima;
+    }
+
 }

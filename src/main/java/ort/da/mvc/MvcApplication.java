@@ -8,8 +8,8 @@ import ort.da.mvc.facturas.modelo.DatosPrueba;
 public class MvcApplication {
 
 	public static void main(String[] args) {
-            DatosPrueba.cargar();
-            SpringApplication.run(MvcApplication.class, args);
+        DatosPrueba.cargar();
+        SpringApplication.run(MvcApplication.class, args);
 	}
 
 }
