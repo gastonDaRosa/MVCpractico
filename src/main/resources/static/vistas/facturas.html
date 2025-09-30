@@ -115,7 +115,7 @@
         const confirmar = await mostrarConfirmacion("¿Desea confirmar la factura?");
         if (!confirmar) return;
 
-        submit("/facturas/guardarFactura", serializarFormulario("formAgregarProducto"));
+        submit("/facturas/confirmarFactura", serializarFormulario("formAgregarProducto"));
         facturaActiva = false;
         mostrar_limpiarEntradas(true);
       });

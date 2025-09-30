@@ -69,7 +69,8 @@ public class ControladorFacturas {
                 mensaje("Se guardó correctamente"),
                 new Respuesta("totalFacturado", SistemaFacturas.getInstancia().getTotalFacturado()),
                 new Respuesta("limpiarEntradas", true),
-                new Respuesta("habilitarIngreso", false));
+                new Respuesta("habilitarIngreso", false),
+                facturas());
     }
 
     @PostMapping("/descartarFactura")
