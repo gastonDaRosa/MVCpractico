@@ -200,7 +200,6 @@ function serializarFormulario(idFormulario) {
 //Ej. de uso (la funcion de seleccion es opcional) :
 /*const html = crearTablaDesdeJson(clientes, function(indice, objeto) {
                 alert(`Fila ${indice} seleccionada:\nNombre: ${objeto.nombre}`);
-               
             });
  */
 

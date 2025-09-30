@@ -16,7 +16,7 @@
       <!-- Formulario para iniciar factura -->
       <form id="formIniciarFactura">
         <label>Cédula Cliente:</label>
-        <input type="text" id="cedula" required />
+        <input type="text" id="cedula" name="cedula" required />
         <button type="submit">Iniciar Factura</button>
       </form>
 
@@ -48,21 +48,19 @@
 
         <!-- Tabla de líneas de factura -->
         <table id="tablaLineas">
-          <thead>
-            <tr>
-              <th>Cantidad</th>
-              <th>Producto</th>
-              <th>Total Línea</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
+            <tbody></tbody>
         </table>
 
         <button id="btnConfirmar">Confirmar Factura</button>
         <button id="btnDescartar">Descartar Factura</button>
+
+        <div id="tablaFacturas"></div>
+
       </div>
     </div>
 
+    
+    <script src="/utilesVista.js"></script>
     <script>
       urlIniciarVista = "/facturas/vistaConectada";
 
@@ -79,7 +77,8 @@
       const clienteNombre = document.getElementById("clienteNombre");
       const fechaFactura = document.getElementById("fechaFactura");
       const totalFactura = document.getElementById("totalFactura");
-      const tablaLineas = document.getElementById("tablaLineas").querySelector("tbody");
+      const tablaLineas = document.getElementById("tablaLineas");
+      const tabla = document.getElementById("tablaFacturas");
 
       let facturaActiva = false; // bandera para saber si hay factura iniciada
 
@@ -92,7 +91,7 @@
           mostrar_mensaje("Debe finalizar la factura actual antes de iniciar otra");
           return;
         }
-        submit("/facturas/ingresarCedula", serializarFormulario("formIniciarFactura"));
+        submit("/facturas/iniciarFactura", serializarFormulario("formIniciarFactura"));
       });
 
       // Agregar producto a factura
@@ -171,6 +170,10 @@
         nombreProducto.value = "";
         cantidadProducto.value = "";
       }
+
+    function mostrar_facturas(facturas){
+        tabla.innerHTML = crearTablaDesdeJson(facturas);
+    }
 
       async function mostrar_mensaje(mensaje) {
         await mostrarMensaje(mensaje);
